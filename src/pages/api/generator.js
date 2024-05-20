@@ -19,10 +19,15 @@ export default async function handler(req, res) {
       );
       console.log("AI music generation started:", output);
 
+      // Validate output here
+      if (!output || typeof output !== "object") {
+        throw new Error("Invalid response from Replicate API");
+      }
+
       res.status(200).json({ music: output });
     } catch (error) {
-      console.error("AI music generation failed:", error);
-      res.status(500).json({ error: "AI music generation failed" });
+      console.error("AI music generation failed:", error.message);
+      res.status(500).json({ error: "AI music generation failed", details: error.message });
     }
   } else {
     res.status(405).json({ error: "Method not allowed" });
